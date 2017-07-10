@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -41,6 +42,9 @@ public class MainActivity extends LocaleAwareAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.w("SKDBG", "onCreate()");
+        Log.w("SKDBG", "- Saved instance: " + (savedInstanceState != null));
 
         if (Settings.getInstance(this).shouldUseSecureMode()) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -103,6 +107,8 @@ public class MainActivity extends LocaleAwareAppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.i("SKDBG", "onResume()");
+
         super.onResume();
 
         TelemetryWrapper.startSession();
@@ -115,7 +121,16 @@ public class MainActivity extends LocaleAwareAppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.w("SKDBG", "onDestroy()");
+    }
+
+    @Override
     protected void onPause() {
+        Log.i("SKDBG", "onPause()");
+
         if (isFinishing()) {
             WebViewProvider.performCleanup(this);
         }
@@ -136,6 +151,8 @@ public class MainActivity extends LocaleAwareAppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent unsafeIntent) {
+        Log.w("SKDBG", "onNewIntent()");
+
         final SafeIntent intent = new SafeIntent(unsafeIntent);
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             // We can't update our fragment right now because we need to wait until the activity is

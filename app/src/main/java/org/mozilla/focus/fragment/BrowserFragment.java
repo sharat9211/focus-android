@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mozilla.focus.R;
 import org.mozilla.focus.activity.InfoActivity;
@@ -274,6 +276,8 @@ public class BrowserFragment extends WebFragment implements View.OnClickListener
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.e("SKDBG", "BrowserFragment.onSaveInstanceState()");
+
         super.onSaveInstanceState(outState);
 
         if (pendingDownload != null) {
@@ -507,7 +511,9 @@ public class BrowserFragment extends WebFragment implements View.OnClickListener
         } else {
             if (isStartedFromExternalApp()) {
                 // We have been started from a VIEW intent. Go back to the previous app immediately (No erase).
-                getActivity().finish();
+                Toast.makeText(getContext(), R.string.feedback_erase, Toast.LENGTH_SHORT).show();
+                erase();
+                getActivity().finishAndRemoveTask();
             } else {
                 // Just go back to the home screen.
                 eraseAndShowHomeScreen();
